@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scrupulous Uniotech</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --white:#ffffff;--off:#f8f9fb;--g100:#eef0f4;--g200:#d8dce6;--g400:#8a90a0;--g700:#3a3f52;--dark:#1a1e2e;
+      --orange:#e8680a;--orange-l:#fef3ea;--blue:#1a6fc4;--blue-l:#e8f1fc;--teal:#0e9e82;--teal-l:#e4f7f3;
+      --green:#3aab3a;--red:#d63a1e;
+      --grad:linear-gradient(135deg,#e8680a 0%,#d63a1e 35%,#1a6fc4 70%,#0e9e82 100%);
+      --grad2:linear-gradient(135deg,#1a6fc4 0%,#0e9e82 100%);
+      --font-h:'Plus Jakarta Sans',sans-serif;--font-b:'Outfit',sans-serif;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font-b);background:var(--white);color:var(--dark);overflow-x:hidden}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:72px;background:rgba(255,255,255,0.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--g100);box-shadow:0 1px 16px rgba(26,30,46,0.06)}
+    .nav-logo{display:flex;align-items:center;gap:0.75rem;cursor:pointer}
+    .nav-logo img{height:48px;width:auto;object-fit:contain}
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{font-size:0.875rem;font-weight:500;color:var(--g700);text-decoration:none;transition:color 0.2s;cursor:pointer}
+    .nav-links a:hover{color:var(--orange)}
+    .nav-cta{background:var(--grad)!important;color:#fff!important;padding:0.55rem 1.4rem;border-radius:6px;font-weight:600!important;box-shadow:0 2px 12px rgba(232,104,10,0.3);transition:opacity 0.2s,transform 0.15s!important}
+    .nav-cta:hover{opacity:0.9;transform:translateY(-1px)!important}
+
+    .page{display:none;padding-top:72px;min-height:100vh}
+    .page.active{display:block}
+
+    /* HERO */
+    .hero{min-height:calc(100vh - 72px);display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:3rem;padding:3rem 5vw;background:var(--off);position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;right:-100px;top:-100px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(232,104,10,0.07) 0%,transparent 65%);pointer-events:none}
+    .hero-badge{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.4rem 1rem;border-radius:100px;background:var(--grad);color:#fff;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(232,104,10,0.25);animation:fadeUp 0.5s ease both}
+    .hero-title{font-family:var(--font-h);font-size:clamp(2.4rem,4.2vw,3.8rem);font-weight:800;line-height:1.08;letter-spacing:-0.03em;margin-bottom:1.5rem;animation:fadeUp 0.5s 0.1s ease both}
+    .hi1{color:var(--orange)}.hi2{color:var(--blue)}.hi3{color:var(--teal)}
+    .hero-desc{font-size:1rem;font-weight:300;line-height:1.8;color:var(--g700);max-width:480px;margin-bottom:2.5rem;animation:fadeUp 0.5s 0.2s ease both}
+    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;animation:fadeUp 0.5s 0.3s ease both}
+    .hero-visual{display:flex;align-items:center;justify-content:center;animation:fadeIn 0.7s 0.2s ease both;position:relative;z-index:1}
+
+    /* Hero image card */
+    .hero-img-card{width:100%;max-width:480px;border-radius:20px;overflow:hidden;box-shadow:0 16px 60px rgba(26,30,46,0.18);position:relative}
+    .hero-img-card img{width:100%;height:320px;object-fit:cover;display:block}
+    .hero-img-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(26,30,46,0.85) 0%,transparent 100%);padding:1.5rem}
+    .hero-img-overlay-title{font-family:var(--font-h);font-size:1rem;font-weight:700;color:#fff;margin-bottom:0.35rem}
+    .hero-img-tags{display:flex;gap:0.5rem;flex-wrap:wrap}
+    .htag{font-size:0.65rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.25rem 0.65rem;border-radius:100px}
+    .htag-o{color:#fff;background:rgba(232,104,10,0.85)}
+    .htag-b{color:#fff;background:rgba(26,111,196,0.85)}
+    .htag-t{color:#fff;background:rgba(14,158,130,0.85)}
+
+    /* Stats */
+    .hero-stats{display:flex;gap:0;border-top:1px solid var(--g200);background:var(--white)}
+    .stat-item{flex:1;padding:1.75rem 2rem;border-right:1px solid var(--g100)}
+    .stat-item:last-child{border-right:none}
+    .stat-num{font-family:var(--font-h);font-size:2rem;font-weight:800;letter-spacing:-0.03em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .stat-label{font-size:0.75rem;color:var(--g400);letter-spacing:0.05em;text-transform:uppercase;margin-top:0.2rem}
+
+    /* Buttons */
+    .btn-primary{background:var(--grad);color:#fff;padding:0.85rem 2rem;border-radius:6px;font-family:var(--font-b);font-weight:600;font-size:0.95rem;border:none;cursor:pointer;text-decoration:none;box-shadow:0 3px 16px rgba(232,104,10,0.3);transition:opacity 0.2s,transform 0.15s}
+    .btn-primary:hover{opacity:0.9;transform:translateY(-1px)}
+    .btn-outline{background:transparent;color:var(--dark);padding:0.85rem 2rem;border-radius:6px;font-family:var(--font-b);font-weight:600;font-size:0.95rem;border:2px solid var(--g200);cursor:pointer;transition:border-color 0.2s,transform 0.15s}
+    .btn-outline:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-1px)}
+
+    /* Sections */
+    .section{padding:5.5rem 5vw}
+    .section-alt{background:var(--off)}
+    .s-label{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--orange);margin-bottom:1rem}
+    .s-title{font-family:var(--font-h);font-size:clamp(1.8rem,3vw,2.7rem);font-weight:800;letter-spacing:-0.025em;line-height:1.1;margin-bottom:1.2rem}
+    .s-sub{font-size:1rem;font-weight:300;color:var(--g700);line-height:1.75;max-width:560px}
+
+    /* Cards */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;margin-top:3rem}
+    .card{background:var(--white);border-radius:12px;padding:2rem;border:1px solid var(--g100);transition:transform 0.25s,box-shadow 0.25s}
+    .card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(26,30,46,0.1)}
+    .card-icon{width:50px;height:50px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem}
+    .card-icon svg{width:22px;height:22px;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .ci-o{background:var(--orange-l)}.ci-o svg{stroke:var(--orange);fill:none}
+    .ci-b{background:var(--blue-l)}.ci-b svg{stroke:var(--blue);fill:none}
+    .ci-t{background:var(--teal-l)}.ci-t svg{stroke:var(--teal);fill:none}
+    .ci-r{background:#fdecea}.ci-r svg{stroke:var(--red);fill:none}
+    .ci-g{background:#edf7ed}.ci-g svg{stroke:var(--green);fill:none}
+    .card-title{font-family:var(--font-h);font-size:1.05rem;font-weight:700;letter-spacing:-0.01em;margin-bottom:0.6rem}
+    .card-desc{font-size:0.875rem;color:var(--g700);line-height:1.7;font-weight:300}
+
+    /* IMAGE GALLERY SECTION */
+    .img-gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:260px 260px;gap:1rem;margin-top:3rem}
+    .img-gallery .gi{border-radius:12px;overflow:hidden;position:relative}
+    .img-gallery .gi:first-child{grid-row:1/3}
+    .img-gallery .gi img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s}
+    .img-gallery .gi:hover img{transform:scale(1.04)}
+    .gi-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(26,30,46,0.75),transparent);padding:1rem 1rem 0.75rem;font-size:0.75rem;font-weight:600;color:#fff;letter-spacing:0.06em;text-transform:uppercase}
+
+    /* ABOUT */
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+    .about-img-wrap{position:relative;border-radius:16px;overflow:hidden}
+    .about-img-wrap img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+    .about-badge{position:absolute;bottom:-16px;right:-16px;background:var(--grad);color:#fff;padding:1.25rem 1.5rem;border-radius:12px;text-align:center;box-shadow:0 4px 20px rgba(232,104,10,0.35)}
+    .about-badge-num{font-family:var(--font-h);font-size:1.8rem;font-weight:800;line-height:1}
+    .about-badge-lbl{font-size:0.68rem;letter-spacing:0.06em;opacity:0.9;margin-top:0.2rem}
+    .dot-list{list-style:none;margin-top:1.5rem;display:flex;flex-direction:column;gap:0.85rem}
+    .dot-list li{display:flex;align-items:flex-start;gap:0.75rem;font-size:0.925rem;color:var(--g700);font-weight:300;line-height:1.55}
+    .dot-list li::before{content:'';flex-shrink:0;width:7px;height:7px;border-radius:50%;background:var(--grad);margin-top:0.52rem}
+
+    /* PORTFOLIO */
+    .portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:1.5rem;margin-top:3rem}
+    .p-card{border-radius:12px;overflow:hidden;border:1px solid var(--g100);transition:transform 0.25s,box-shadow 0.25s;background:var(--white)}
+    .p-card:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(26,30,46,0.1)}
+    .p-img{height:200px;overflow:hidden;position:relative}
+    .p-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s}
+    .p-card:hover .p-img img{transform:scale(1.05)}
+    .p-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,30,46,0.4),transparent)}
+    .p-tag{display:inline-block;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.28rem 0.65rem;border-radius:100px;margin-bottom:0.6rem}
+    .pt-o{color:var(--orange);background:var(--orange-l)}
+    .pt-b{color:var(--blue);background:var(--blue-l)}
+    .pt-t{color:var(--teal);background:var(--teal-l)}
+    .p-body{padding:1.5rem}
+    .p-name{font-family:var(--font-h);font-size:1.05rem;font-weight:700;letter-spacing:-0.01em;margin-bottom:0.5rem}
+    .p-info{font-size:0.85rem;color:var(--g700);line-height:1.65;font-weight:300}
+
+    /* CONTACT */
+    .contact-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:4rem;margin-top:3rem}
+    .contact-items{display:flex;flex-direction:column;gap:1.5rem}
+    .c-item{display:flex;gap:1rem;align-items:flex-start}
+    .c-icon{width:46px;height:46px;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center}
+    .c-icon svg{width:20px;height:20px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .ci-oo{background:var(--orange-l)}.ci-oo svg{stroke:var(--orange)}
+    .ci-bb{background:var(--blue-l)}.ci-bb svg{stroke:var(--blue)}
+    .ci-tt{background:var(--teal-l)}.ci-tt svg{stroke:var(--teal)}
+    .c-label{font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--g400);margin-bottom:0.3rem}
+    .c-val{font-size:0.925rem;color:var(--dark)}
+    .contact-map-img{border-radius:12px;overflow:hidden;margin-top:1.5rem;border:1px solid var(--g100)}
+    .contact-map-img img{width:100%;height:160px;object-fit:cover;display:block}
+
+    .form{display:flex;flex-direction:column;gap:1.2rem}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+    .fg{display:flex;flex-direction:column;gap:0.4rem}
+    .fg label{font-size:0.78rem;font-weight:600;letter-spacing:0.04em;color:var(--g700)}
+    .fg input,.fg textarea,.fg select{background:var(--white);border:1.5px solid var(--g200);border-radius:8px;padding:0.8rem 1rem;font-family:var(--font-b);font-size:0.9rem;color:var(--dark);outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+    .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(232,104,10,0.1)}
+    .fg textarea{resize:vertical;min-height:130px}
+
+    /* INDUSTRY */
+    .industry-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-top:2.5rem}
+    .industry-item{background:var(--white);border:1.5px solid var(--g100);border-radius:10px;padding:1.5rem 1rem;text-align:center;transition:border-color 0.2s,transform 0.2s;cursor:default}
+    .industry-item:hover{border-color:var(--orange);transform:translateY(-2px)}
+    .industry-icon{font-size:1.6rem;margin-bottom:0.5rem}
+    .industry-name{font-family:var(--font-h);font-weight:700;font-size:0.875rem}
+
+    /* FEATURE STRIP */
+    .feature-strip{display:flex;border-top:1px solid var(--g100);border-bottom:1px solid var(--g100);background:var(--white)}
+    .fs-item{flex:1;padding:1.5rem 1.25rem;display:flex;align-items:center;gap:0.75rem;border-right:1px solid var(--g100);font-size:0.875rem;font-weight:500;color:var(--g700)}
+    .fs-item:last-child{border-right:none}
+    .fsdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .do{background:var(--orange)}.db{background:var(--blue)}.dt{background:var(--teal)}.dg{background:var(--green)}
+
+    /* GRAD BAR */
+    .grad-bar{height:4px;background:var(--grad)}
+
+    footer{background:var(--dark);color:var(--g400);padding:2.5rem 5vw;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem}
+    .f-logo{display:flex;align-items:center;gap:0.75rem;cursor:pointer}
+    .f-logo img{height:38px;width:auto}
+    .f-logo-text{font-family:var(--font-h);font-size:1rem;font-weight:700;color:#fff}
+    .f-copy{font-size:0.78rem}
+    .f-links{display:flex;gap:2rem;list-style:none}
+    .f-links a{color:var(--g400);text-decoration:none;font-size:0.78rem;transition:color 0.2s;cursor:pointer}
+    .f-links a:hover{color:#fff}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    @media(max-width:860px){
+      .hero{grid-template-columns:1fr}
+      .hero-visual{display:none}
+      .about-grid{grid-template-columns:1fr}
+      .about-img-wrap{display:none}
+      .contact-grid{grid-template-columns:1fr}
+      .form-row{grid-template-columns:1fr}
+      .nav-links{display:none}
+      .feature-strip{flex-wrap:wrap}
+      .fs-item{flex:calc(50% - 1px)}
+      .hero-stats{flex-wrap:wrap}
+      .stat-item{flex:calc(50% - 1px)}
+      .img-gallery{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+      .img-gallery .gi:first-child{grid-row:auto;grid-column:1/3}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABGAIUDASIAAhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAAAAYHAwUIBAIB/8QAORAAAQMDAgQDBgQFBAMAAAAAAQIDBAAFEQYhBxIxQRNRYQgUIjKBoVJicZEVIyRCwRZDkrFygtH/xAAbAQABBQEBAAAAAAAAAAAAAAAAAQIDBAUGB//EAC4RAAEDAgQEBQQDAQAAAAAAAAEAAhEDBAUhMVESE0FhBjKh0fBxgZHBFCIjsf/aAAwDAQACEQMRAD8A7KpSlCEpSlCErQat1TC0+ltkx5dwuD4JjwITRced9cDZKfzKwK31VHxP44aa0lNet9qY/jV3R8DqWVhLLRGfhW53I/CM474qSnb1a54KQkpj7qha/wClfy/WJ+dl93c8adRg+4sWvSkRXypXIDkjHqoBQB/SobdeC3EK5LL0/VEKc6evjyXlf9jH2rNobVvGfiVIVIs7lssFnSvlXM905kgjqlHMSXCPTAHc1d+mLXPtcIt3K/TLzJVup6QhCB/6pQAAP3qC7whrDw1ny7afYQtjDvFtdom0pNY3fhGf3JLiuYbtwh4hWcF9m2CWlG/PAkhSvon4VftWvsvEHXml5hjpu84Fk4XEnpLiR6FK/iH0IrsT6VGtdaJ0/rGAqPdYiS+EkMymwA80fMK7j0ORWW/DCz+1BxBXTW3jJtc8vEqLXtPUDMfYzP2hRXhbxftWq32rXdGk2u7r2Qgqy0+fJCj0P5Tv5Zq0K4m11pi5aN1K9aJ5ypvDjD6MpDrZPwrT5Hb6EV0ZwB107qzTjkG5O+JdrdyodWerzZ+Vz9diD6jPen2V657jRq+YKHxF4do0KIv7EzSPTadCO3TPMH0s2lKVqLikpSlCEpSlCEpSlCEpSvw0IVM+0/xDkaYsjGnbO+pm6XNClOPIOFMRxsSPJSjkA9gFHriqB4MaIc13rVi1uc6Lewnx5ziTghoH5QeylHYfU9q2ftIzXZ/GS9BZPLG8GO2PJKW0n/tSj9auH2PbS1G0Rc7vyjx5k8tFWN+RtIwP3Uo11LSLHDg9nmd+/YLj3TiGJ8D/ACtnL6e5V0WyDEttvYgQI7UaLHQG2mm04ShI6ACoFxV1JYhHXaFNPzJ6MkGO+pr3dWOpWO/5d/XFSvXFzdtOmJkxggPhIQ0fJSjgH6Zz9KocRypRWslSiSSScknzry3xJjJtAKDM3OEmc8vdep4BhjK557zDWnKMs/ZfMO53tgjwbvcEfpJV/k1P+G03V93ugC7u8qCxgvqeQlefJAJHU/YV8v6CVD0k5cHFOO3AJS54KPlQnIyPU4NWHpS0t2Wxx4SAOcJ5nVfiWep/x9KzcHw++/lDnOLWgB0Seug9M1fxbFLR9Aik0FxMTA+59lU/tY25lenrPdeVIfZlqY5u5QtBVj90Cq69nK4OQeKkFlKiETWXY7gHf4SsfdAqZ+1ffGVuWjTrTgU42VTHwD8uRyIB/X4zUP8AZutrk7ihElJQS1AYdfcPkSnkSP3V9q2q5m/HBuF0WGMLPC9TnaFr49Y9dF1fStfZ7oxczM8DpGkKYJznmwBv9/tWwrep1G1G8TTIXlaUpSnoSlKUISlKUISlKUIXIntN2Vy38VpcwtkM3JhqQ2rsSEhtQ+hSP3FWb7I10ac0ldLIVAPxJnjhOdyhxI3/AOSDUv43aEGt9LhEQITdoRLsNSjgKyPibJ7BWB+hANc38PtQ3PQOtEzzGdSplSo86Iscqloz8SCD0UCAR6jyNbYqi6tOX1b+lzT6Zsb/AJp8rv3r6rrPXFuXc9NSo7QJcSA4gDuUnOPrVRtxcdBVzabvds1DZ2braZSJMV4bKHUHulQ7KHcGtbe9Jw5jq5MZQjPKOVADKFHzx2+leY+KsBuL0ivbZuAgjSR27r0HB8VZbsNN/lOYKijPGCx2mWLbq5qRaXSP5Evwy5HkJ8wpIylQ7pI28yK1utOP+j7Xb1jTzq75PIw2lDakMpPmtRA29BufTrW7uWhHJ8VUSbChzoyuqVkFJ9d+h9RUbPAjSRWZEyJ7q0N1ATXOUff/ADU+F45eGmKV3aVOMZSAIPeSQB+YU/KwkO43OMbA5e6oC4Xmbqy/rlPh+XdZzmeVCCpTijsAlI7AYAA6AV0Bo20p4X6BWqWUDUl33UgEEsgDAT+iQSSe6jWRF04b8OWXGdKW6HNupHKXGfix/wCTu+3oCTWr0rar5xAvqrncHHBE5v50jGEhI/22x/8AOnU70+vUAJFu3/R3SZidSTpP0JA3VfG/Fzr2iLC28o/Wgy6DZWRwmjONaaVJcB/qXlLTnukAJz9SDUxrFEYZixmozDYbaaQEISOgA2ArLW/ZWwtaDKQ6BYbRAhKUpVpKlKUoQlKrbS2sb/dLpFiPu2dmY5IxOtT6HI8qG2M5KObZ7GBuNt8it81ryzOx1yWmLo7HCHHGnm4Dim30t/MWzj4h5dM9s1E2sxwlXauH16buHhn6fO2W4zGSldKiUHiDp2cpkxVznGnnI6G3vcnA2ovkhshRHQlJGema9Fw1tZIDU52X7423AmIhyle6LPhLWAUqOBnkPMnChtuKXmsiZUZs7gO4SwztHzcKS1BeJXDOxazSZTgMG6pTyomNJGVAdAsf3j7jzrZN63s5bWp9m4xnG5TUZ1l+GtLjZdOGlqT2Qo7BXTOxwdq8ur9XrhWq6vWnkEu0So7UpuWwsJUlxSQOQ7ZyFbKGRtThcBn9gUx2HVKx5Tma7/b3H5CpuLpbiZw1ujk20NOSopP8wxQXmXgPxt/MP1xkedWLpfjJZZgTG1FGds0vooqSVNE/rjmT9RUuuWsrJb7k/DkOSOWKpCJclEdSmIyl45UuODZJOQfTIzjNYJuoNNS4a5U6Et5tu4i2uePAKi28SAAoEbJJUn4um4p1S4D9SJVOnhdxRANKYPQiRmtNctJaS1PzS7FqKXbnnfiK7TcylBPmW88v7AVHZXBKXKdzJ1xcZTflIaLh+68VL7c7oeZfHIMTTsZTrcpcRT6bWPDDyASpJWBtjB3OAe2a9l6uF5g6ysdogKt6LdNQ6XErZV4iA0ASEkEDcKAG22O9U6lKlUEuEpjsDp1nxVZBgnUjQToFodOcHdM2xxLs52VdFpOyXiEN/wDFPX6mrEjssx2EMR2kMtIGEIQkJSkeQA6VCnNVXO2ag1GbyqMbPZ2Wnv6WKtb3K7zEFW52SEnO3rtWxia1tFwXJjwjM8ZEMzGFLhOBL7XTnbGMrAJGcb706iKFPJgAV2nhRt2/5MyyzHcA6/QhSilROLrW2otNrdddduMmXBTMV/D4Tih4WN3eTcoRnoDv23xX3B1tb52pm7PEiy32XYTcxqc20SwpC84PN2TgfN0zkdRU3NZupTZ1xJ4TAn0UppUUi8QNMvlxZlusx0x3ZTUh5lSW32myAtbZ/uAyO2+RjNeDUeuTHsirjBjvxDFfimU3coTrZLDzob5kevU98YwRk0GswCZTm2NwXBvAROX5y/7kp1StNp/UcC9SJsaM3KZkQlpS81JYUysBQyhQCuqVAHB9D0pTg4ESFWex1N3C4QVoo+gyHLS1M1FcbhDtbyH47clCFO+IkbZexzcv5e/TONqyxdHzodpetEPVM5mB4C48Rkx2leAhR6FRGV8oykZ6DzpSmclg6Kyb6u7U+g9tc9Vmb0fy6Fh6aVeJJXBLJizUtIS42WVBTXw45TjlA36ioVxWjp0dpK53CVdrjPevE+Gpa/DbCm3WilRWnYADkaACdwCB5mlKir02tpkjoFcwy4qVLtjHHJzgTkNwf+gKVtaSF2tE6XLvk6ROujMctzFNNoVHS2rxWglCRy7KPMeuST2rBcuHzlwi3RqRqe4KXdFxnZLhZazzsnKeUYwlJwn4fT1NKVLyWEZj58Kqtv67HS09dh0jt2H4XqmaGRK9+jrvUwQbotDtzjJbRiQsJSlRCsZbCwhPMB9MZr8u+hjMfuHg3+dEjTJjc8x0NoUlEhHJhWSMlJ8NJKOmaUo5TD0TW31dsEO07Dt7DPss7GjUo1Y3qBy6vOPtuuObMNtrWFAgNrWkArbSDslWSCBvtWy1NYv4uuDKYnv2+fAdU5GktJSrl5k8qkqSoYUkg7j0B7UpS8toBEaphuapcHE5gQNNNlqJOifedP3uC7e5apt7wmdOLSOZSAnkCEoxypSE5AxvuTnNZU6SkJmQpY1DL8eJal25J8BrCgrBLhGPmylO3Tb1NKUnKZOid/NrRE+g2jbYRC8dr0E5aIMJq1aknRpEaEICpBZbWXGEqKkApIwFIKlYUPM5zXtjaMjwZluctc96JHiwU295gtpcEhhJJCVE7g5KviH4jSlKKLBoErr6u8kudrrkM/nTbpC8Fv4cwY1vk2ldwcdtrsRURDSYrTbqEZBSS6lPOpScDBJ7ZOTXsuOk7jcrQYFw1XOe/qGHkuJjMpI8JQWkY5cZKgCT3x2FKUnJYBACV1/Xc7iJzmdBrvp+d+qyyNMz/wDUE+8Q9SSork1DSFtiK0tKUthXKBzDP9yv3pSlHKb8JUf8moYmNtB0y2X/2Q==" alt="Scrupulous Uniotech"/>
+  </div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')">Home</a></li>
+    <li><a onclick="showPage('about')">About</a></li>
+    <li><a onclick="showPage('services')">Services</a></li>
+    <li><a onclick="showPage('portfolio')">Portfolio</a></li>
+    <li><a onclick="showPage('contact')" class="nav-cta">Contact Us</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HOME ═══ -->
+<div id="home" class="page active">
+  <div class="hero">
+    <div style="position:relative;z-index:1">
+      <div class="hero-badge">⚙️ Precision Hydraulic Engineering — Nagpur</div>
+      <h1 class="hero-title"><span class="hi1">Engineered</span> for<br/>Industrial<br/><span class="hi2">Power</span> &amp; <span class="hi3">Precision</span></h1>
+      <p class="hero-desc">Scrupulous Uniotech manufactures and customises hydraulic pumps in-house — built to your exact specs. We're also authorised dealers for premium hydraulic brands.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="showPage('contact')">Get a Free Quote</button>
+        <button class="btn-outline" onclick="showPage('services')">Explore Services</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-img-card">
+        <img src="https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Hydraulic pump manufacturing" onerror="this.src='https://images.pexels.com/photos/162553/keys-workshop-mechanic-tools-162553.jpeg?auto=compress&cs=tinysrgb&w=800'"/>
+        <div class="hero-img-overlay">
+          <div class="hero-img-overlay-title">Custom-Built Hydraulic Pumps</div>
+          <div class="hero-img-tags">
+            <span class="htag htag-o">Gear Pumps</span>
+            <span class="htag htag-b">Piston Pumps</span>
+            <span class="htag htag-t">Vane Pumps</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feature-strip">
+    <div class="fs-item"><span class="fsdot do"></span> In-house CNC manufacturing</div>
+    <div class="fs-item"><span class="fsdot db"></span> Custom pump design</div>
+    <div class="fs-item"><span class="fsdot dt"></span> Authorised dealerships</div>
+    <div class="fs-item"><span class="fsdot dg"></span> After-sales support</div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">15+</div><div class="stat-label">Years Experience</div></div>
+    <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Pumps Delivered</div></div>
+    <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">Industrial Clients</div></div>
+    <div class="stat-item"><div class="stat-num">8+</div><div class="stat-label">Dealer Brands</div></div>
+  </div>
+
+  <!-- IMAGE GALLERY -->
+  <div class="section">
+    <div class="s-label">📸 Our Work in Action</div>
+    <h2 class="s-title">Manufacturing &amp; Engineering</h2>
+    <p class="s-sub">A glimpse into our facility, products and the industries we power.</p>
+    <div class="img-gallery">
+      <div class="gi">
+        <img src="https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Hydraulic pump manufacturing" onerror="this.style.background='#e8f1fc'"/>
+        <div class="gi-label">Hydraulic Pump Assembly</div>
+      </div>
+      <div class="gi">
+        <img src="https://images.pexels.com/photos/2760243/pexels-photo-2760243.jpeg?auto=compress&cs=tinysrgb&w=600" alt="CNC machining" onerror="this.style.background='#fef3ea'"/>
+        <div class="gi-label">CNC Precision Machining</div>
+      </div>
+      <div class="gi">
+        <img src="https://images.pexels.com/photos/3862365/pexels-photo-3862365.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Industrial components" onerror="this.style.background='#e4f7f3'"/>
+        <div class="gi-label">Hydraulic Components</div>
+      </div>
+      <div class="gi">
+        <img src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Engineering workshop" onerror="this.style.background='#fdecea'"/>
+        <div class="gi-label">Engineering Workshop</div>
+      </div>
+      <div class="gi">
+        <img src="https://images.pexels.com/photos/3862132/pexels-photo-3862132.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Pump testing" onerror="this.style.background='#edf7ed'"/>
+        <div class="gi-label">Quality Testing</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section section-alt" style="padding-top:3rem;padding-bottom:3rem">
+    <div class="s-label">⚡ Core Offerings</div>
+    <h2 class="s-title">Everything Hydraulic,<br/>Under One Roof</h2>
+    <div class="cards-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="card">
+        <div class="card-icon ci-o"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+        <div class="card-title">Custom Manufacturing</div>
+        <div class="card-desc">Hydraulic pumps designed and built in-house to your precise specifications.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon ci-r"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg></div>
+        <div class="card-title">Repair &amp; Overhaul</div>
+        <div class="card-desc">Complete rebuilding and pressure testing of all hydraulic pump types.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon ci-b"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+        <div class="card-title">Authorised Dealership</div>
+        <div class="card-desc">Official dealer for premium hydraulic brands — genuine parts at competitive prices.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div id="about" class="page">
+  <div class="section">
+    <div class="about-grid">
+      <div class="about-img-wrap">
+        <img src="https://images.pexels.com/photos/3862365/pexels-photo-3862365.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Our workshop" onerror="this.src='https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=800'"/>
+        <div class="about-badge">
+          <div class="about-badge-num">15+</div>
+          <div class="about-badge-lbl">YEARS IN<br/>INDUSTRY</div>
+        </div>
+      </div>
+      <div>
+        <div class="s-label">🏭 About Us</div>
+        <h2 class="s-title">Crafting Hydraulic Solutions Since Day One</h2>
+        <p class="s-sub">Scrupulous Uniotech is a Nagpur-based hydraulic engineering company specialising in the design, manufacture, customisation and repair of hydraulic pumps — serving agriculture, construction, mining and heavy industry.</p>
+        <ul class="dot-list">
+          <li>In-house manufacturing facility with precision CNC machining</li>
+          <li>Custom hydraulic pumps built exactly to your specifications</li>
+          <li>Authorised dealership for leading hydraulic component brands</li>
+          <li>Experienced team of hydraulic engineers and technicians</li>
+          <li>Rigorous quality and pressure testing before every delivery</li>
+          <li>After-sales support and preventive maintenance services</li>
+        </ul>
+        <div style="margin-top:2rem">
+          <button class="btn-primary" onclick="showPage('contact')">Talk to Our Engineers</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About image strip -->
+  <div class="section section-alt" style="padding-top:3rem;padding-bottom:3rem">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+      <div style="border-radius:12px;overflow:hidden;height:200px">
+        <img src="https://images.pexels.com/photos/2760243/pexels-photo-2760243.jpeg?auto=compress&cs=tinysrgb&w=600" style="width:100%;height:100%;object-fit:cover" alt="CNC machining"/>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;height:200px">
+        <img src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=600" style="width:100%;height:100%;object-fit:cover" alt="Workshop"/>
+      </div>
+      <div style="border-radius:12px;overflow:hidden;height:200px">
+        <img src="https://images.pexels.com/photos/3862132/pexels-photo-3862132.jpeg?auto=compress&cs=tinysrgb&w=600" style="width:100%;height:100%;object-fit:cover" alt="Quality testing"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="s-label">💡 Our Values</div>
+    <h2 class="s-title">What Drives Us</h2>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon ci-o"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="card-title">Precision</div>
+        <div class="card-desc">Every pump is machined to tight tolerances. We never cut corners on engineering quality.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon ci-b"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="card-title">Reliability</div>
+        <div class="card-desc">Pumps tested under real operating conditions for long, dependable service life.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon ci-t"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="card-title">Partnership</div>
+        <div class="card-desc">We work closely with every client — from brief to delivery and beyond.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SERVICES ═══ -->
+<div id="services" class="page">
+  <div class="section">
+    <div class="s-label">🔧 Our Services</div>
+    <h2 class="s-title">Complete Hydraulic<br/>Engineering Services</h2>
+    <p class="s-sub">From a single custom pump to full hydraulic component supply — we handle every stage.</p>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon ci-o"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+        <div class="card-title">Custom Pump Manufacturing</div>
+        <div class="card-desc">Gear pumps, vane pumps and piston pumps built in-house to your exact pressure, flow and mounting requirements.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon ci-r"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg></div>
+        <div class="card-title">Repair &amp; Rebuilding</div>
+        <div class="card-desc">Full overhaul of worn or failed pumps — disassembly, inspection, part replacement, reassembly and pressure testing.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon ci-b"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div class="card-title">Customisation &amp; Modifications</div>
+        <div class="card-desc">Modify port sizes, shaft configurations, pressure ratings or mounting patterns to fit your specific machine.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon ci-t"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+        <div class="card-title">Authorised Dealership</div>
+        <div class="card-desc">Authorised dealers for select hydraulic brands — valves, cylinders, motors, fittings and accessories.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon ci-g"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div class="card-title">Quality Testing &amp; Inspection</div>
+        <div class="card-desc">Every unit undergoes pressure testing, efficiency analysis and leak testing before leaving our workshop.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon ci-o"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="card-title">AMC &amp; After-Sales Support</div>
+        <div class="card-desc">Annual maintenance contracts, scheduled servicing and emergency breakdown support.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grad-bar"></div>
+
+  <div class="section section-alt">
+    <div class="s-label">🏗️ Industries We Serve</div>
+    <h2 class="s-title">Across Every Sector</h2>
+    <div class="industry-grid">
+      <div class="industry-item"><div class="industry-icon">🏗️</div><div class="industry-name">Construction</div></div>
+      <div class="industry-item"><div class="industry-icon">🌾</div><div class="industry-name">Agriculture</div></div>
+      <div class="industry-item"><div class="industry-icon">⛏️</div><div class="industry-name">Mining</div></div>
+      <div class="industry-item"><div class="industry-icon">🏭</div><div class="industry-name">Manufacturing</div></div>
+      <div class="industry-item"><div class="industry-icon">🚢</div><div class="industry-name">Marine</div></div>
+      <div class="industry-item"><div class="industry-icon">⚡</div><div class="industry-name">Energy</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PORTFOLIO ═══ -->
+<div id="portfolio" class="page">
+  <div class="section">
+    <div class="s-label">📁 Our Work</div>
+    <h2 class="s-title">Projects &amp; Products</h2>
+    <p class="s-sub">A selection of custom hydraulic pumps manufactured, repaired and supplied to clients across industries.</p>
+    <div class="portfolio-grid">
+
+      <div class="p-card">
+        <div class="p-img">
+          <img src="https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=700" alt="High pressure gear pump"/>
+          <div class="p-img-overlay"></div>
+        </div>
+        <div class="p-body">
+          <span class="p-tag pt-o">Custom Manufacturing</span>
+          <div class="p-name">High-Pressure Gear Pump — 250 bar</div>
+          <div class="p-info">Custom gear pump for a construction OEM. Rated 250 bar with 45 L/min flow rate and SAE B mounting.</div>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="p-img">
+          <img src="https://images.pexels.com/photos/3862365/pexels-photo-3862365.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Pump repair overhaul"/>
+          <div class="p-img-overlay"></div>
+        </div>
+        <div class="p-body">
+          <span class="p-tag pt-b">Repair &amp; Overhaul</span>
+          <div class="p-name">Agricultural Tractor Pump Rebuild</div>
+          <div class="p-info">Complete overhaul of 12 units for a large agri fleet — all seals, bearings and gears replaced to OEM spec.</div>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="p-img">
+          <img src="https://images.pexels.com/photos/2760243/pexels-photo-2760243.jpeg?auto=compress&cs=tinysrgb&w=700" alt="CNC machining customisation"/>
+          <div class="p-img-overlay"></div>
+        </div>
+        <div class="p-body">
+          <span class="p-tag pt-t">Customisation</span>
+          <div class="p-name">Piston Pump — Modified Port Layout</div>
+          <div class="p-info">Redesigned port orientation and shaft type to fit a specialised mining machine chassis.</div>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="p-img">
+          <img src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Hydraulic valve supply"/>
+          <div class="p-img-overlay"></div>
+        </div>
+        <div class="p-body">
+          <span class="p-tag pt-b">Dealership Supply</span>
+          <div class="p-name">Hydraulic Valve Bank — Steel Plant</div>
+          <div class="p-info">Bulk supply of directional control valves and pressure relief valves to a steel plant as authorised dealer.</div>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="p-img">
+          <img src="https://images.pexels.com/photos/3862132/pexels-photo-3862132.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Tandem pump crane"/>
+          <div class="p-img-overlay"></div>
+        </div>
+        <div class="p-body">
+          <span class="p-tag pt-o">Custom Manufacturing</span>
+          <div class="p-name">Tandem Pump Unit — Crane Application</div>
+          <div class="p-info">Dual-output tandem pump for a mobile crane providing independent circuits for slewing and hoisting.</div>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="p-img">
+          <img src="https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=700&h=400&fit=crop&crop=right" alt="Marine pump restoration"/>
+          <div class="p-img-overlay"></div>
+        </div>
+        <div class="p-body">
+          <span class="p-tag pt-t">Repair &amp; Overhaul</span>
+          <div class="p-name">Marine Hydraulic Pump Restoration</div>
+          <div class="p-info">Full disassembly, corrosion treatment, seal replacement and pressure testing of pumps from a river cargo vessel.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTACT ═══ -->
+<div id="contact" class="page">
+  <div class="section">
+    <div class="s-label">📬 Get In Touch</div>
+    <h2 class="s-title">Let's Discuss Your<br/>Hydraulic Requirements</h2>
+    <p class="s-sub">Whether you need a custom pump, a repair, or a dealership product — our team is ready to help.</p>
+    <div class="contact-grid">
+      <div>
+        <!-- Contact Person 1 -->
+        <div style="background:var(--off);border:1.5px solid var(--g100);border-radius:12px;padding:1.25rem;margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--g100)">
+            <div class="c-icon ci-oo" style="flex-shrink:0"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div><div class="c-label" style="margin-bottom:0.1rem">Contact 1</div><div style="font-family:var(--font-h);font-weight:700;font-size:1rem;color:var(--dark)">Priya Agnihotri</div></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.65rem">
+            <div class="c-item">
+              <div class="c-icon ci-bb" style="flex-shrink:0"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.58 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l1.17-1.17a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+              <div><div class="c-label">Phone</div><div class="c-val">+91 97642 09861</div></div>
+            </div>
+            <div class="c-item">
+              <div class="c-icon ci-tt" style="flex-shrink:0"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+              <div><div class="c-label">Email</div><div class="c-val">priyastrivedi1994&#64;gmail.com</div></div>
+            </div>
+          </div>
+        </div>
+        <!-- Contact Person 2 -->
+        <div style="background:var(--off);border:1.5px solid var(--g100);border-radius:12px;padding:1.25rem;margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--g100)">
+            <div class="c-icon ci-tt" style="flex-shrink:0"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div><div class="c-label" style="margin-bottom:0.1rem">Contact 2</div><div style="font-family:var(--font-h);font-weight:700;font-size:1rem;color:var(--dark)">Priya Trivedi</div></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.65rem">
+            <div class="c-item">
+              <div class="c-icon ci-bb" style="flex-shrink:0"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.58 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.29 6.29l1.17-1.17a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+              <div><div class="c-label">Phone</div><div class="c-val">+91 97644 58965</div></div>
+            </div>
+            <div class="c-item">
+              <div class="c-icon ci-tt" style="flex-shrink:0"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+              <div><div class="c-label">Email</div><div class="c-val">priyatribedi123&#64;gmail.com</div></div>
+            </div>
+          </div>
+        </div>
+        <!-- Location & Hours -->
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div class="c-item">
+            <div class="c-icon ci-oo"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div><div class="c-label">Location</div><div class="c-val">Nagpur, Maharashtra, India</div></div>
+          </div>
+          <div class="c-item">
+            <div class="c-icon ci-bb"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div><div class="c-label">Business Hours</div><div class="c-val">Mon – Sat: 9:00 AM – 6:00 PM</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="form">
+        <div class="form-row">
+          <div class="fg"><label>Full Name *</label><input type="text" placeholder="Your name"/></div>
+          <div class="fg"><label>Phone Number *</label><input type="tel" placeholder="+91 XXXXX XXXXX"/></div>
+        </div>
+        <div class="fg"><label>Email Address</label><input type="email" placeholder="you@company.com"/></div>
+        <div class="fg">
+          <label>Service Required</label>
+          <select>
+            <option value="">Select a service…</option>
+            <option>Custom Pump Manufacturing</option>
+            <option>Pump Repair &amp; Overhaul</option>
+            <option>Pump Customisation</option>
+            <option>Dealership / Product Purchase</option>
+            <option>Annual Maintenance Contract</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="fg"><label>Message / Requirements</label><textarea placeholder="Describe your hydraulic requirements — pump type, pressure rating, flow rate, application, etc."></textarea></div>
+        <button class="btn-primary" style="align-self:flex-start;padding:0.9rem 2.5rem" onclick="alert('Thank you! Priya will get back to you shortly.')">Send Enquiry →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grad-bar"></div>
+<footer>
+  <div class="f-logo" onclick="showPage('home')">
+    <img src="data:image/png;base64,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" alt="Scrupulous Uniotech"/>
+    <div class="f-logo-text">Scrupulous Uniotech</div>
+  </div>
+  <div class="f-copy">© 2025 Scrupulous Uniotech, Nagpur. All rights reserved.</div>
+  <ul class="f-links">
+    <li><a onclick="showPage('home')">Home</a></li>
+    <li><a onclick="showPage('about')">About</a></li>
+    <li><a onclick="showPage('services')">Services</a></li>
+    <li><a onclick="showPage('portfolio')">Portfolio</a></li>
+    <li><a onclick="showPage('contact')">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+  function showPage(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
